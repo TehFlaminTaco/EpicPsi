@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " BB",
+        "BBB",
+        "SB "
+    ],
+    "key":
+    {
+        "B": { "item" : "psi:psimetal" },
+        "S": { "item" : "psi:psigem" }
+    },
+    "result":
+    {
+        "item" : "epicpsi:psi_greatsword",
+        "count" : 1
+    }
+}

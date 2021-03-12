@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "   ",
+        " B ",
+        "IGI"
+    ],
+    
+    "key":
+    {
+        "B": { "item" : "epicfight:katana" },
+        "I": { "item" : "psi:psimetal" },
+        "G": { "item" : "psi:psigem"}
+    },
+    
+    "result":
+    {
+        "item" : "epicpsi:psi_katana",
+        "count" : 1
+    }
+}

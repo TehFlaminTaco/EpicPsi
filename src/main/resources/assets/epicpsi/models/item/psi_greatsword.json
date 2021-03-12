@@ -1,0 +1,59 @@
+{
+	"loader": "forge:separate-perspective",
+	"base":
+	{
+		"loader": "forge:obj",
+  		"model": "epicpsi:models/item/obj/psi_greatsword.obj",
+  		"flip-v": true,
+  		"textures": { "#grip": "epicpsi:item/psi_swords.png" },
+  		"display":
+  		{
+    		"thirdperson_righthand":
+    		{
+      			"translation": [4, -4.5, 4.25],
+      			"rotation": [86, 0, 0],
+      			"scale": [0.5, 0.5, 0.5]
+    		},
+    		"firstperson_righthand":
+    		{
+      			"translation": [10,-5,-5],
+      			"rotation": [90,0,0],
+      			"scale": [0.35, 0.35, 0.35]
+    		},
+    		"gui":
+    		{
+      			"translation": [-3,-3,0],
+      			"rotation": [90,-45,90],
+      			"scale": [0.2,0.2,0.2]
+    		}
+  		}
+	},
+	"perspectives":
+	{
+		"ground":
+		{
+			"parent": "item/generated",
+			"textures":
+			{
+				"layer0": "epicpsi:item/psi_greatsword"
+			}
+		},
+		"gui":
+		{
+			"parent": "item/generated",
+			"textures":
+			{
+				"layer0": "epicpsi:item/psi_greatsword"
+			},
+			"gui_light": "front"
+		},
+		"fixed":
+		{
+			"parent": "item/generated",
+			"textures":
+			{
+				"layer0": "epicpsi:item/psi_greatsword"
+			}
+		}
+	}
+}

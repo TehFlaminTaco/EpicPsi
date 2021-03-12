@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "  B",
+        " S ",
+        "S  "
+    ],
+    
+    "key":
+    {
+        "B": { "item" : "psi:psimetal_sword" },
+        "S": { "item" : "minecraft:stick" }
+    },
+    
+    "result":
+    {
+        "item" : "epicpsi:psi_spear",
+        "count" : 1
+    }
+}
