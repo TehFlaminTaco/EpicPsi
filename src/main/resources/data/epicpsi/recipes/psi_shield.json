@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "IGI",
+        "III",
+        " I "
+    ],
+    
+    "key":
+    {
+        "I": { "item" : "psi:psimetal" },
+        "G": { "item" : "psi:psigem"}
+    },
+    
+    "result":
+    {
+        "item" : "epicpsi:psi_shield",
+        "count" : 1
+    }
+}
