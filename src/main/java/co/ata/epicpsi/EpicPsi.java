@@ -3,6 +3,10 @@ package co.ata.epicpsi;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -18,6 +22,13 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import vazkii.psi.api.PsiAPI;
+import vazkii.psi.api.cad.ISocketable;
+import vazkii.psi.api.spell.SpellContext;
+import vazkii.psi.common.core.handler.PlayerDataHandler;
+import vazkii.psi.common.core.handler.PlayerDataHandler.PlayerData;
+import vazkii.psi.common.item.ItemCAD;
 
 import co.ata.epicpsi.client.ShieldTextures;
 import co.ata.epicpsi.items.ModItems;
@@ -49,6 +60,45 @@ public class EpicPsi
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.ITEMS.register(bus);
     }
+
+    @SubscribeEvent
+    public void onEntityAttacked(LivingAttackEvent event){
+        Entity entity = event != null ? event.getEntity() : null;
+        float damage = event.getAmount();
+        if (entity != null && entity instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity)entity;
+            ItemStack stack = player.getActiveItemStack();
+            PlayerData data = PlayerDataHandler.get(player);
+		    ItemStack playerCad = PsiAPI.getPlayerCAD(player);
+
+            if (player.isActiveItemStackBlocking() == true && ((stack).getItem() instanceof PsiShield) && !playerCad.isEmpty() && !event.getSource().isUnblockable()) {
+                int timesCast = stack.getOrCreateTag().getInt(TAG_TIMES_CAST);
+
+                ItemStack bullet = ISocketable.socketable(stack).getSelectedBullet();
+                ItemCAD.cast(player.getEntityWorld(), player, data, bullet, playerCad, getCastCooldown(stack), 0, getCastVolume(), (SpellContext context) -> {
+                    context.tool = stack;
+                    Entity source = event.getSource().getTrueSource();
+                    if(source instanceof LivingEntity){
+                        context.attackingEntity = (LivingEntity)source;
+                    }
+                    context.damageTaken = event.getAmount();
+                    context.loopcastIndex = timesCast;
+                }, (int) (data.calculateDamageDeduction((float) event.getAmount()) * 0.75));
+
+                stack.getOrCreateTag().putInt(TAG_TIMES_CAST, timesCast + 1);
+            }
+        }
+    }
+
+    private static final String TAG_TIMES_CAST = "timesCast";
+
+    public int getCastCooldown(ItemStack stack) {
+		return 5;
+	}
+
+	public float getCastVolume() {
+		return 0.025F;
+	}
 
     /*private void setup(final FMLCommonSetupEvent event)
     {

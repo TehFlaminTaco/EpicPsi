@@ -17,9 +17,5 @@ public class ModItems {
     public static final RegistryObject<Item> PSI_GREATSWORD = ITEMS.register("psi_greatsword", () -> new PsiGreatsword(new Item.Properties().group(EpicPsiGroup.ITEMS)));
     public static final RegistryObject<Item> PSI_KATANA = ITEMS.register("psi_katana", () -> new PsiKatana(new Item.Properties().group(EpicPsiGroup.ITEMS).rarity(Rarity.RARE).defaultMaxDamage(650)));
 
-    public static final RegistryObject<Item> PSI_SHIELD = ITEMS.register("psi_shield", () ->{
-        PsiShield instance = new PsiShield(new Item.Properties().group(EpicPsiGroup.ITEMS).maxDamage(900).setISTER(()->PsiShield.getISTER()));
-        MinecraftForge.EVENT_BUS.register(instance);
-        return instance;
-    });
+    public static final RegistryObject<Item> PSI_SHIELD = ITEMS.register("psi_shield", () -> new PsiShield(new Item.Properties().group(EpicPsiGroup.ITEMS)));
 }

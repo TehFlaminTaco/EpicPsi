@@ -29,47 +29,8 @@ import vazkii.psi.common.item.tool.IPsimetalTool;
 
 public class PsiShield extends ShieldItem implements IPsimetalTool{
 
-    private static final String TAG_TIMES_CAST = "timesCast";
-
-    @SubscribeEvent
-    public void onEntityAttacked(LivingAttackEvent event){
-        Entity entity = event != null ? event.getEntity() : null;
-        float damage = event.getAmount();
-        if (entity != null && entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity)entity;
-            ItemStack stack = player.getActiveItemStack();
-            PlayerData data = PlayerDataHandler.get(player);
-		    ItemStack playerCad = PsiAPI.getPlayerCAD(player);
-
-            if (player.isActiveItemStackBlocking() == true && ((stack).getItem() instanceof PsiShield) && isEnabled(stack) && !playerCad.isEmpty() && !event.getSource().isUnblockable()) {
-                int timesCast = stack.getOrCreateTag().getInt(TAG_TIMES_CAST);
-
-                ItemStack bullet = ISocketable.socketable(stack).getSelectedBullet();
-                ItemCAD.cast(player.getEntityWorld(), player, data, bullet, playerCad, getCastCooldown(stack), 0, getCastVolume(), (SpellContext context) -> {
-                    context.tool = stack;
-                    Entity source = event.getSource().getTrueSource();
-                    if(source instanceof LivingEntity){
-                        context.attackingEntity = (LivingEntity)source;
-                    }
-                    context.damageTaken = event.getAmount();
-                    context.loopcastIndex = timesCast;
-                }, (int) (data.calculateDamageDeduction((float) event.getAmount()) * 0.75));
-
-                stack.getOrCreateTag().putInt(TAG_TIMES_CAST, timesCast + 1);
-            }
-        }
-    }
-
-    public int getCastCooldown(ItemStack stack) {
-		return 5;
-	}
-
-	public float getCastVolume() {
-		return 0.025F;
-	}
-
     public PsiShield(Properties builder) {
-        super(builder);
+        super(builder.maxDamage(900).setISTER(() -> getISTER()));
     }
 
     @Override

@@ -55,3 +55,17 @@ A mod that adds Psimetal weapons of the extended types from Epic Fight Mod
     versionRange="[1.16.5,1.17)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.epicpsi]]
+    modId="psi"
+    mandatory=true
+    versionRange="[1.16-91,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.epicpsi]]
+    modId="epicfight"
+    mandatory=true
+    versionRange="[1.0,)"
+    ordering="NONE"
+    side="BOTH"
