@@ -11,9 +11,10 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
 import maninhouse.epicfight.animation.LivingMotion;
+import maninhouse.epicfight.animation.types.StaticAnimation;
 import maninhouse.epicfight.capabilities.ModCapabilities;
+import maninhouse.epicfight.capabilities.item.CapabilityItem;
 import maninhouse.epicfight.capabilities.item.ModWeaponCapability;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
 import maninhouse.epicfight.gamedata.Animations;
 import maninhouse.epicfight.gamedata.Colliders;
 import maninhouse.epicfight.gamedata.Skills;
@@ -30,7 +31,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Item.Properties;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
@@ -80,18 +80,16 @@ public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
     @Override
     public void setWeaponCapability()
     {
-    	capability = new ModWeaponCapability(WeaponCategory.GREATSWORD, (playerdata)->Skills.GIANT_WHIRLWIND, null, Sounds.WHOOSH_BIG, Sounds.BLADE_HIT,
-    			Colliders.greatSword, 0, 0, 1, true, false);
-    	capability.addTwohandAutoAttackCombos(Animations.GREATSWORD_AUTO_1);
-    	capability.addTwohandAutoAttackCombos(Animations.GREATSWORD_AUTO_2);
-    	capability.addTwohandAutoAttackCombos(Animations.GREATSWORD_DASH);
-    	capability.setTwoHandStyleAttribute(0.0D, 4.3D, 4);
-    	capability.addLivingMotionChanger(LivingMotion.IDLE, Animations.BIPED_IDLE_MASSIVE_HELD);
-    	capability.addLivingMotionChanger(LivingMotion.WALKING, Animations.BIPED_WALK_MASSIVE_HELD);
-    	capability.addLivingMotionChanger(LivingMotion.RUNNING, Animations.BIPED_RUN_MASSIVE_HELD);
-    	capability.addLivingMotionChanger(LivingMotion.JUMPING, Animations.BIPED_JUMP_MASSIVE_HELD);
-    	capability.addLivingMotionChanger(LivingMotion.KNEELING, Animations.BIPED_KNEEL_MASSIVE_HELD);
-    	capability.addLivingMotionChanger(LivingMotion.SNEAKING, Animations.BIPED_SNEAK_MASSIVE_HELD);
+		this.capability = new ModWeaponCapability(CapabilityItem.WeaponCategory.GREATSWORD, playerdata -> CapabilityItem.WieldStyle.TWO_HAND, null, Sounds.WHOOSH_BIG, Sounds.BLADE_HIT, Colliders.greatSword, CapabilityItem.HandProperty.TWO_HANDED);
+		this.capability.addStyleCombo(CapabilityItem.WieldStyle.TWO_HAND, new StaticAnimation[] { Animations.GREATSWORD_AUTO_1, Animations.GREATSWORD_AUTO_2, Animations.GREATSWORD_DASH });
+		this.capability.addStyleSpecialAttack(CapabilityItem.WieldStyle.TWO_HAND, Skills.GIANT_WHIRLWIND);
+		this.capability.addStyleAttributeSimple(CapabilityItem.WieldStyle.TWO_HAND, 0.0D, 4.3D, 4);
+		this.capability.addLivingMotionChanger(LivingMotion.IDLE, Animations.BIPED_IDLE_MASSIVE_HELD);
+		this.capability.addLivingMotionChanger(LivingMotion.WALKING, Animations.BIPED_WALK_MASSIVE_HELD);
+		this.capability.addLivingMotionChanger(LivingMotion.RUNNING, Animations.BIPED_RUN_MASSIVE_HELD);
+		this.capability.addLivingMotionChanger(LivingMotion.JUMPING, Animations.BIPED_JUMP_MASSIVE_HELD);
+		this.capability.addLivingMotionChanger(LivingMotion.KNEELING, Animations.BIPED_KNEEL_MASSIVE_HELD);
+		this.capability.addLivingMotionChanger(LivingMotion.SNEAKING, Animations.BIPED_SNEAK_MASSIVE_HELD);
     }
     
     @Override
