@@ -50,6 +50,7 @@ import vazkii.psi.common.item.ItemCAD;
 import vazkii.psi.common.item.tool.IPsimetalTool;
 import vazkii.psi.common.item.tool.ToolSocketable;
 import vazkii.psi.common.lib.ModTags;
+import net.minecraft.item.IItemTier;
 
 public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
 
@@ -78,18 +79,19 @@ public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
     }
 
     @Override
-    public void setWeaponCapability()
+    public void setWeaponCapability(IItemTier tier)
     {
-		this.capability = new ModWeaponCapability(CapabilityItem.WeaponCategory.GREATSWORD, playerdata -> CapabilityItem.WieldStyle.TWO_HAND, null, Sounds.WHOOSH_BIG, Sounds.BLADE_HIT, Colliders.greatSword, CapabilityItem.HandProperty.TWO_HANDED);
-		this.capability.addStyleCombo(CapabilityItem.WieldStyle.TWO_HAND, new StaticAnimation[] { Animations.GREATSWORD_AUTO_1, Animations.GREATSWORD_AUTO_2, Animations.GREATSWORD_DASH });
-		this.capability.addStyleSpecialAttack(CapabilityItem.WieldStyle.TWO_HAND, Skills.GIANT_WHIRLWIND);
-		this.capability.addStyleAttributeSimple(CapabilityItem.WieldStyle.TWO_HAND, 0.0D, 4.3D, 4);
-		this.capability.addLivingMotionChanger(LivingMotion.IDLE, Animations.BIPED_IDLE_MASSIVE_HELD);
-		this.capability.addLivingMotionChanger(LivingMotion.WALKING, Animations.BIPED_WALK_MASSIVE_HELD);
-		this.capability.addLivingMotionChanger(LivingMotion.RUNNING, Animations.BIPED_RUN_MASSIVE_HELD);
-		this.capability.addLivingMotionChanger(LivingMotion.JUMPING, Animations.BIPED_JUMP_MASSIVE_HELD);
-		this.capability.addLivingMotionChanger(LivingMotion.KNEELING, Animations.BIPED_KNEEL_MASSIVE_HELD);
-		this.capability.addLivingMotionChanger(LivingMotion.SNEAKING, Animations.BIPED_SNEAK_MASSIVE_HELD);
+		ModWeaponCapability weaponCapability = new ModWeaponCapability(CapabilityItem.WeaponCategory.GREATSWORD, playerdata -> CapabilityItem.WieldStyle.TWO_HAND, null, Sounds.WHOOSH_BIG, Sounds.BLADE_HIT, Colliders.greatSword, CapabilityItem.HandProperty.TWO_HANDED);
+		weaponCapability.addStyleCombo(CapabilityItem.WieldStyle.TWO_HAND, new StaticAnimation[] { Animations.GREATSWORD_AUTO_1, Animations.GREATSWORD_AUTO_2, Animations.GREATSWORD_DASH });
+		weaponCapability.addStyleSpecialAttack(CapabilityItem.WieldStyle.TWO_HAND, Skills.GIANT_WHIRLWIND);
+		weaponCapability.addStyleAttributeSimple(CapabilityItem.WieldStyle.TWO_HAND, 0.0D, 4.3D, 4);
+		weaponCapability.addLivingMotionChanger(LivingMotion.IDLE, Animations.BIPED_IDLE_MASSIVE_HELD);
+		weaponCapability.addLivingMotionChanger(LivingMotion.WALKING, Animations.BIPED_WALK_MASSIVE_HELD);
+		weaponCapability.addLivingMotionChanger(LivingMotion.RUNNING, Animations.BIPED_RUN_MASSIVE_HELD);
+		weaponCapability.addLivingMotionChanger(LivingMotion.JUMPING, Animations.BIPED_JUMP_MASSIVE_HELD);
+		weaponCapability.addLivingMotionChanger(LivingMotion.KNEELING, Animations.BIPED_KNEEL_MASSIVE_HELD);
+		weaponCapability.addLivingMotionChanger(LivingMotion.SNEAKING, Animations.BIPED_SNEAK_MASSIVE_HELD);
+		this.capability = (CapabilityItem)weaponCapability;
     }
     
     @Override

@@ -4,12 +4,10 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nullable;
 
-import co.ata.epicpsi.EpicPsi;
 import co.ata.epicpsi.client.ShieldTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,14 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import vazkii.psi.api.PsiAPI;
-import vazkii.psi.api.cad.ISocketable;
-import vazkii.psi.api.spell.SpellContext;
-import vazkii.psi.common.core.handler.PlayerDataHandler;
-import vazkii.psi.common.core.handler.PlayerDataHandler.PlayerData;
-import vazkii.psi.common.item.ItemCAD;
 import vazkii.psi.common.item.tool.IPsimetalTool;
 
 public class PsiShield extends ShieldItem implements IPsimetalTool{
