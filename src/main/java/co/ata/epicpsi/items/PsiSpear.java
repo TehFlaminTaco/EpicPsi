@@ -18,9 +18,11 @@ import com.google.common.collect.Multimap;
 
 import maninhouse.epicfight.animation.LivingMotion;
 import maninhouse.epicfight.animation.types.StaticAnimation;
-import maninhouse.epicfight.capabilities.ModCapabilities;
-import maninhouse.epicfight.capabilities.item.CapabilityItem;
+import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldOption;
+import maninhouse.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
+import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldStyle;
 import maninhouse.epicfight.capabilities.item.ModWeaponCapability;
+import maninhouse.epicfight.capabilities.ModCapabilities;
 import maninhouse.epicfight.gamedata.Animations;
 import maninhouse.epicfight.gamedata.Colliders;
 import maninhouse.epicfight.gamedata.Skills;
@@ -66,17 +68,27 @@ public class PsiSpear extends WeaponItem implements IPsimetalTool {
 	@Override
     public void setWeaponCapability(IItemTier tier)
     {
-		int harvestLevel = getTier().getHarvestLevel();
-		ModWeaponCapability weaponCapability = new ModWeaponCapability(CapabilityItem.WeaponCategory.SPEAR, playerdata -> playerdata.getOriginalEntity().getHeldItem(Hand.OFF_HAND).isEmpty() ? CapabilityItem.WieldStyle.TWO_HAND : CapabilityItem.WieldStyle.ONE_HAND, null, Sounds.WHOOSH, Sounds.BLADE_HIT, Colliders.spearNarrow, CapabilityItem.HandProperty.MAINHAND_ONLY);
-		weaponCapability.addStyleCombo(CapabilityItem.WieldStyle.ONE_HAND, new StaticAnimation[] { Animations.SPEAR_ONEHAND_AUTO, Animations.SPEAR_DASH });
-		weaponCapability.addStyleCombo(CapabilityItem.WieldStyle.TWO_HAND, new StaticAnimation[] { Animations.SPEAR_TWOHAND_AUTO_1, Animations.SPEAR_TWOHAND_AUTO_2, Animations.SPEAR_DASH });
-		weaponCapability.addStyleCombo(CapabilityItem.WieldStyle.MOUNT, new StaticAnimation[] { Animations.SPEAR_MOUNT_ATTACK });
-		weaponCapability.addStyleAttributeSimple(CapabilityItem.WieldStyle.ONE_HAND, 4.0D + 4.0D * harvestLevel, 2.4D + harvestLevel * 0.3D, 1);
-		weaponCapability.addStyleAttributeSimple(CapabilityItem.WieldStyle.TWO_HAND, 0.0D, 0.6D + harvestLevel * 0.5D, 3);
-		weaponCapability.addStyleSpecialAttack(CapabilityItem.WieldStyle.ONE_HAND, Skills.HEARTPIERCER);
-		weaponCapability.addStyleSpecialAttack(CapabilityItem.WieldStyle.TWO_HAND, Skills.SLAUGHTER_STANCE);
-		weaponCapability.addLivingMotionChanger(LivingMotion.RUNNING, Animations.BIPED_RUN_HELDING_WEAPON);
-		this.capability = (CapabilityItem)weaponCapability;
+		int harvestLevel = tier.getHarvestLevel();
+		ModWeaponCapability weaponCapability = new ModWeaponCapability(new ModWeaponCapability.Builder()
+			.setCategory(WeaponCategory.SPEAR)
+			.setStyleGetter((playerdata)  -> playerdata.getOriginalEntity().getHeldItemOffhand().isEmpty() ? HoldStyle.TWO_HAND : HoldStyle.ONE_HAND)
+			.setHitSound(Sounds.BLADE_HIT)
+			.setWeaponCollider(Colliders.spear)
+			.setHoldOption(HoldOption.MAINHAND_ONLY)
+			.addStyleCombo(HoldStyle.ONE_HAND, Animations.SPEAR_ONEHAND_AUTO, Animations.SPEAR_DASH, Animations.SPEAR_ONEHAND_AIR_SLASH)
+			.addStyleCombo(HoldStyle.TWO_HAND, Animations.SPEAR_TWOHAND_AUTO_1, Animations.SPEAR_TWOHAND_AUTO_2, Animations.SPEAR_DASH, Animations.SPEAR_TWOHAND_AIR_SLASH)
+			.addStyleCombo(HoldStyle.MOUNT, Animations.SPEAR_MOUNT_ATTACK)
+			.addStyleSpecialAttack(HoldStyle.ONE_HAND, Skills.HEARTPIERCER)
+			.addStyleSpecialAttack(HoldStyle.TWO_HAND, Skills.SLAUGHTER_STANCE)
+			.addLivingMotionModifier(HoldStyle.ONE_HAND, LivingMotion.RUN, Animations.BIPED_RUN_SPEAR)
+			.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.RUN, Animations.BIPED_RUN_SPEAR)
+			.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.BLOCK, Animations.SPEAR_GUARD)
+		);
+		
+		weaponCapability.addStyleAttributeSimple(HoldStyle.ONE_HAND, 4.0D + 4.0D * harvestLevel, 2.4D + harvestLevel * 0.3D, 1);
+		weaponCapability.addStyleAttributeSimple(HoldStyle.TWO_HAND, 0.0D, 0.6D + harvestLevel * 0.5D, 3);
+		
+		this.capability = weaponCapability;
     }
     @Override
 	public boolean hitEntity(ItemStack itemstack, LivingEntity target, @Nonnull LivingEntity attacker) {

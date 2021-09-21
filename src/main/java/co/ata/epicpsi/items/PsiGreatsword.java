@@ -12,9 +12,11 @@ import com.google.common.collect.ImmutableMultimap.Builder;
 
 import maninhouse.epicfight.animation.LivingMotion;
 import maninhouse.epicfight.animation.types.StaticAnimation;
-import maninhouse.epicfight.capabilities.ModCapabilities;
-import maninhouse.epicfight.capabilities.item.CapabilityItem;
+import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldOption;
+import maninhouse.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
+import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldStyle;
 import maninhouse.epicfight.capabilities.item.ModWeaponCapability;
+import maninhouse.epicfight.capabilities.ModCapabilities;
 import maninhouse.epicfight.gamedata.Animations;
 import maninhouse.epicfight.gamedata.Colliders;
 import maninhouse.epicfight.gamedata.Skills;
@@ -81,17 +83,27 @@ public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
     @Override
     public void setWeaponCapability(IItemTier tier)
     {
-		ModWeaponCapability weaponCapability = new ModWeaponCapability(CapabilityItem.WeaponCategory.GREATSWORD, playerdata -> CapabilityItem.WieldStyle.TWO_HAND, null, Sounds.WHOOSH_BIG, Sounds.BLADE_HIT, Colliders.greatSword, CapabilityItem.HandProperty.TWO_HANDED);
-		weaponCapability.addStyleCombo(CapabilityItem.WieldStyle.TWO_HAND, new StaticAnimation[] { Animations.GREATSWORD_AUTO_1, Animations.GREATSWORD_AUTO_2, Animations.GREATSWORD_DASH });
-		weaponCapability.addStyleSpecialAttack(CapabilityItem.WieldStyle.TWO_HAND, Skills.GIANT_WHIRLWIND);
-		weaponCapability.addStyleAttributeSimple(CapabilityItem.WieldStyle.TWO_HAND, 0.0D, 4.3D, 4);
-		weaponCapability.addLivingMotionChanger(LivingMotion.IDLE, Animations.BIPED_IDLE_MASSIVE_HELD);
-		weaponCapability.addLivingMotionChanger(LivingMotion.WALKING, Animations.BIPED_WALK_MASSIVE_HELD);
-		weaponCapability.addLivingMotionChanger(LivingMotion.RUNNING, Animations.BIPED_RUN_MASSIVE_HELD);
-		weaponCapability.addLivingMotionChanger(LivingMotion.JUMPING, Animations.BIPED_JUMP_MASSIVE_HELD);
-		weaponCapability.addLivingMotionChanger(LivingMotion.KNEELING, Animations.BIPED_KNEEL_MASSIVE_HELD);
-		weaponCapability.addLivingMotionChanger(LivingMotion.SNEAKING, Animations.BIPED_SNEAK_MASSIVE_HELD);
-		this.capability = (CapabilityItem)weaponCapability;
+		ModWeaponCapability weaponCapability = new ModWeaponCapability(new ModWeaponCapability.Builder()
+    		.setCategory(WeaponCategory.GREATSWORD)
+    		.setStyleGetter((playerdata) -> HoldStyle.TWO_HAND)
+    		.setSmashingSound(Sounds.WHOOSH_BIG)
+    		.setHitSound(Sounds.BLADE_HIT)
+    		.setWeaponCollider(Colliders.greatSword)
+    		.setHoldOption(HoldOption.TWO_HANDED)
+    		.addStyleCombo(HoldStyle.TWO_HAND, Animations.GREATSWORD_AUTO_1, Animations.GREATSWORD_AUTO_2, Animations.GREATSWORD_DASH, Animations.GREATSWORD_AIR_SLASH)
+        	.addStyleSpecialAttack(HoldStyle.TWO_HAND, Skills.GIANT_WHIRLWIND)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.IDLE, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.WALK, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.RUN, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.FALL, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.KNEEL, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.SNEAK, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.SWIM, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.FLOAT, Animations.BIPED_IDLE_GREATSWORD)
+        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.BLOCK, Animations.GREATSWORD_GUARD)
+    	);
+    	weaponCapability.addStyleAttributeSimple(HoldStyle.TWO_HAND, (tier.getHarvestLevel() >= 3) ? 10.0D * (tier.getHarvestLevel() - 2) : 0.0D, 2.8D + 0.4D * tier.getHarvestLevel(), 4);
+    	this.capability = weaponCapability;
     }
     
     @Override
