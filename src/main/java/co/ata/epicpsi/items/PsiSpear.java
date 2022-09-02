@@ -16,18 +16,18 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Multimap;
 
-import maninhouse.epicfight.animation.LivingMotion;
-import maninhouse.epicfight.animation.types.StaticAnimation;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldOption;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldStyle;
-import maninhouse.epicfight.capabilities.item.ModWeaponCapability;
-import maninhouse.epicfight.capabilities.ModCapabilities;
-import maninhouse.epicfight.gamedata.Animations;
-import maninhouse.epicfight.gamedata.Colliders;
-import maninhouse.epicfight.gamedata.Skills;
-import maninhouse.epicfight.gamedata.Sounds;
-import maninhouse.epicfight.item.WeaponItem;
+import yesman.epicfight.animation.LivingMotion;
+import yesman.epicfight.animation.types.StaticAnimation;
+import yesman.epicfight.capabilities.item.CapabilityItem.HoldOption;
+import yesman.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
+import yesman.epicfight.capabilities.item.CapabilityItem.Style;
+import yesman.epicfight.capabilities.item.ModWeaponCapability;
+import yesman.epicfight.capabilities.ModCapabilities;
+import yesman.epicfight.gamedata.Animations;
+import yesman.epicfight.gamedata.Colliders;
+import yesman.epicfight.gamedata.Skills;
+import yesman.epicfight.gamedata.Sounds;
+import yesman.epicfight.item.WeaponItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -65,31 +65,6 @@ public class PsiSpear extends WeaponItem implements IPsimetalTool {
         return false;
     }
 
-	@Override
-    public void setWeaponCapability(IItemTier tier)
-    {
-		int harvestLevel = tier.getHarvestLevel();
-		ModWeaponCapability weaponCapability = new ModWeaponCapability(new ModWeaponCapability.Builder()
-			.setCategory(WeaponCategory.SPEAR)
-			.setStyleGetter((playerdata)  -> playerdata.getOriginalEntity().getHeldItemOffhand().isEmpty() ? HoldStyle.TWO_HAND : HoldStyle.ONE_HAND)
-			.setHitSound(Sounds.BLADE_HIT)
-			.setWeaponCollider(Colliders.spear)
-			.setHoldOption(HoldOption.MAINHAND_ONLY)
-			.addStyleCombo(HoldStyle.ONE_HAND, Animations.SPEAR_ONEHAND_AUTO, Animations.SPEAR_DASH, Animations.SPEAR_ONEHAND_AIR_SLASH)
-			.addStyleCombo(HoldStyle.TWO_HAND, Animations.SPEAR_TWOHAND_AUTO_1, Animations.SPEAR_TWOHAND_AUTO_2, Animations.SPEAR_DASH, Animations.SPEAR_TWOHAND_AIR_SLASH)
-			.addStyleCombo(HoldStyle.MOUNT, Animations.SPEAR_MOUNT_ATTACK)
-			.addStyleSpecialAttack(HoldStyle.ONE_HAND, Skills.HEARTPIERCER)
-			.addStyleSpecialAttack(HoldStyle.TWO_HAND, Skills.SLAUGHTER_STANCE)
-			.addLivingMotionModifier(HoldStyle.ONE_HAND, LivingMotion.RUN, Animations.BIPED_RUN_SPEAR)
-			.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.RUN, Animations.BIPED_RUN_SPEAR)
-			.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.BLOCK, Animations.SPEAR_GUARD)
-		);
-		
-		weaponCapability.addStyleAttributeSimple(HoldStyle.ONE_HAND, 4.0D + 4.0D * harvestLevel, 2.4D + harvestLevel * 0.3D, 1);
-		weaponCapability.addStyleAttributeSimple(HoldStyle.TWO_HAND, 0.0D, 0.6D + harvestLevel * 0.5D, 3);
-		
-		this.capability = weaponCapability;
-    }
     @Override
 	public boolean hitEntity(ItemStack itemstack, LivingEntity target, @Nonnull LivingEntity attacker) {
 		super.hitEntity(itemstack, target, attacker);
@@ -155,16 +130,6 @@ public class PsiSpear extends WeaponItem implements IPsimetalTool {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        ToolSocketable socketable = new ToolSocketable(stack, 3);
-        return new ICapabilityProvider(){
-            @Override
-            public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                LazyOptional<T> psiCap = socketable.getCapability(cap, side);
-                if(psiCap != null && psiCap.isPresent()){
-                    return psiCap;
-                }
-                return cap == ModCapabilities.CAPABILITY_ITEM ? optional.cast() : LazyOptional.empty();
-            }
-        };
+        return new ToolSocketable(stack, 3);
 	}
 }

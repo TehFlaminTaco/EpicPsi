@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Multimap;
 
-import maninhouse.epicfight.capabilities.ModCapabilities;
-import maninhouse.epicfight.item.KatanaItem;
+import yesman.epicfight.capabilities.ModCapabilities;
+import yesman.epicfight.item.KatanaItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -117,16 +117,6 @@ public class PsiKatana extends KatanaItem implements IPsimetalTool{
     @Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        ToolSocketable socketable = new ToolSocketable(stack, 3);
-        return new ICapabilityProvider(){
-            @Override
-            public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                LazyOptional<T> psiCap = socketable.getCapability(cap, side);
-                if(psiCap != null && psiCap.isPresent()){
-                    return psiCap;
-                }
-                return cap == ModCapabilities.CAPABILITY_ITEM ? optional.cast() : LazyOptional.empty();
-            }
-        };
+        return new ToolSocketable(stack, 3);
 	}
 }

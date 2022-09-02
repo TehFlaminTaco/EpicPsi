@@ -10,18 +10,19 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
-import maninhouse.epicfight.animation.LivingMotion;
-import maninhouse.epicfight.animation.types.StaticAnimation;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldOption;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
-import maninhouse.epicfight.capabilities.item.CapabilityItem.HoldStyle;
-import maninhouse.epicfight.capabilities.item.ModWeaponCapability;
-import maninhouse.epicfight.capabilities.ModCapabilities;
-import maninhouse.epicfight.gamedata.Animations;
-import maninhouse.epicfight.gamedata.Colliders;
-import maninhouse.epicfight.gamedata.Skills;
-import maninhouse.epicfight.gamedata.Sounds;
-import maninhouse.epicfight.item.WeaponItem;
+import yesman.epicfight.animation.LivingMotion;
+import yesman.epicfight.animation.types.StaticAnimation;
+import yesman.epicfight.capabilities.item.CapabilityItem.HoldOption;
+import yesman.epicfight.capabilities.item.CapabilityItem.WeaponCategory;
+import yesman.epicfight.capabilities.item.CapabilityItem.Style;
+import yesman.epicfight.capabilities.item.ModWeaponCapability;
+import yesman.epicfight.capabilities.ModCapabilities;
+import yesman.epicfight.gamedata.Animations;
+import yesman.epicfight.gamedata.Colliders;
+import yesman.epicfight.gamedata.Skills;
+import yesman.epicfight.gamedata.Sounds;
+import yesman.epicfight.item.WeaponItem;
+import yesman.epicfight.item.GreatswordItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -52,14 +53,14 @@ import vazkii.psi.common.item.ItemCAD;
 import vazkii.psi.common.item.tool.IPsimetalTool;
 import vazkii.psi.common.item.tool.ToolSocketable;
 import vazkii.psi.common.lib.ModTags;
-import net.minecraft.item.IItemTier;
+import net.minecraft.item.IItemTier; 
 
-public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
+public class PsiGreatsword extends GreatswordItem implements IPsimetalTool {
 
     protected static final UUID MOVEMENT_SPEED_MODIFIER = UUID.fromString("16295ED8-B092-4A75-9A94-BCD8D56668BB");
 
     public PsiGreatsword(Properties build) {
-        super(ModItemTier.PSI_GREATSWORD, 0, 0.0F, build);
+        super(build, ModItemTier.PSI_GREATSWORD);
     }
 
     @Override
@@ -78,32 +79,6 @@ public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
 	public boolean canHarvestBlock(BlockState blockIn)
     {
         return false;
-    }
-
-    @Override
-    public void setWeaponCapability(IItemTier tier)
-    {
-		ModWeaponCapability weaponCapability = new ModWeaponCapability(new ModWeaponCapability.Builder()
-    		.setCategory(WeaponCategory.GREATSWORD)
-    		.setStyleGetter((playerdata) -> HoldStyle.TWO_HAND)
-    		.setSmashingSound(Sounds.WHOOSH_BIG)
-    		.setHitSound(Sounds.BLADE_HIT)
-    		.setWeaponCollider(Colliders.greatSword)
-    		.setHoldOption(HoldOption.TWO_HANDED)
-    		.addStyleCombo(HoldStyle.TWO_HAND, Animations.GREATSWORD_AUTO_1, Animations.GREATSWORD_AUTO_2, Animations.GREATSWORD_DASH, Animations.GREATSWORD_AIR_SLASH)
-        	.addStyleSpecialAttack(HoldStyle.TWO_HAND, Skills.GIANT_WHIRLWIND)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.IDLE, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.WALK, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.RUN, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.FALL, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.KNEEL, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.SNEAK, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.SWIM, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.FLOAT, Animations.BIPED_IDLE_GREATSWORD)
-        	.addLivingMotionModifier(HoldStyle.TWO_HAND, LivingMotion.BLOCK, Animations.GREATSWORD_GUARD)
-    	);
-    	weaponCapability.addStyleAttributeSimple(HoldStyle.TWO_HAND, (tier.getHarvestLevel() >= 3) ? 10.0D * (tier.getHarvestLevel() - 2) : 0.0D, 2.8D + 0.4D * tier.getHarvestLevel(), 4);
-    	this.capability = weaponCapability;
     }
     
     @Override
@@ -181,16 +156,6 @@ public class PsiGreatsword extends WeaponItem implements IPsimetalTool {
     @Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        ToolSocketable socketable = new ToolSocketable(stack, 3);
-        return new ICapabilityProvider(){
-            @Override
-            public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                LazyOptional<T> psiCap = socketable.getCapability(cap, side);
-                if(psiCap != null && psiCap.isPresent()){
-                    return psiCap;
-                }
-                return cap == ModCapabilities.CAPABILITY_ITEM ? optional.cast() : LazyOptional.empty();
-            }
-        };
+        return new ToolSocketable(stack, 3);
 	}
 }
